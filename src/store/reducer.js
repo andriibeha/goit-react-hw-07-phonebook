@@ -1,13 +1,93 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 const initialState = {
+    error: '',
+    isLoading: false,
     contacts: {
-        items: JSON.parse(window.localStorage.getItem('contacts')) ?? [],
+        items: [],
         filter: {
             value: ""
         }
     }
 };
+
+const setError = (state, action) => {
+    state.isLoading = false;
+    state.error = action.payload;
+};
+
+export const fetchContacts = createAsyncThunk(
+    "contacts/fetchContacts",
+    async function (_, {rejectWithValue}) { 
+        try {
+            const response = await fetch('https://6304b2f794b8c58fd7231db1.mockapi.io/api/contacts');
+
+            if (!response.ok) { 
+                throw new Error('Error:(');    
+            }
+
+            const data = await response.json();
+
+            return data;
+        } catch (error) { 
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
+export const deleteContacts = createAsyncThunk(
+    "contacts/deleteContacts",
+    async function (id, { rejectWithValue, dispatch }) { 
+        try { 
+            const response = await fetch(`https://6304b2f794b8c58fd7231db1.mockapi.io/api/contacts/${id}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) { 
+                throw new Error('Sorry cant delete:(');  
+            };
+
+
+            dispatch(removeContact(id));
+        } catch (error) { 
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
+export const addContacts = createAsyncThunk(
+    "contacts/addContacts",
+    async function (data, { rejectWithValue, dispatch }) { 
+        try { 
+            /* "createdAt": "2022-08-22T20:18:40.512Z",
+            "name": "Vincent Oberbrunner IV",
+            "phone": "425-345-1737",
+            "id": "6" */
+            const contact = {
+                name: data.name,
+                phone: data.phone,
+                createdAt: Date.now(),
+            };
+
+            const response = await fetch(`https://6304b2f794b8c58fd7231db1.mockapi.io/api/contacts`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': "application/json",
+                    body: JSON.stringify(contact)
+                }
+            });
+
+            if (!response.ok) { 
+                throw new Error('Sorry cant add contact:(');  
+            };
+
+
+            dispatch(setContact(data));
+        } catch (error) { 
+            return rejectWithValue(error.message);
+        }
+    }
+);
 
 export const contactsSlice = createSlice({
     name: 'contacts',
@@ -29,10 +109,23 @@ export const contactsSlice = createSlice({
             state.contacts.items.splice(indexId, 1);
         },
     },
+    extraReducers: {
+        [fetchContacts.pending]: (state) => {
+            state.isLoading = true;
+            state.error = '';
+        },
+        [fetchContacts.fulfilled]: (state, action) => {
+            state.isLoading = false;
+            state.contacts.items = action.payload;
+        },
+        [fetchContacts.rejected]: setError,
+        [deleteContacts.rejected]: setError,
+        [addContacts.rejected]: setError,
+    },
 });
 
 
-export const { setFilter, setContact, removeContact } = contactsSlice.actions;
+export const { setFilter, setContact, removeContact , fetchItemsRequest, fetchItemsSucsess, fetchItemsFailed} = contactsSlice.actions;
 
 export default contactsSlice.reducer;
 

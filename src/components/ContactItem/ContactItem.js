@@ -1,17 +1,16 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import {  useDispatch } from 'react-redux';
-import {  removeContact } from "../../store/reducer";
+import {  deleteContacts } from "../../store/reducer";
 import s from "./ContactItem.module.css";
 
 const ContactItem = ({ item }) => {
     const dispatch = useDispatch();
-    console.log(item)
     return (
         <li className={s.item}>
-            {item.name} : {item.number}
+            {item.name} : {item.phone}
             <button type="button" className={s.delete}
-                onClick={() => dispatch(removeContact(item.id))}>
+                onClick={() => dispatch(deleteContacts(item.id))}>
                 Delete
             </button>
         </li>
@@ -22,7 +21,7 @@ const ContactItem = ({ item }) => {
 ContactItem.prototype = { 
     item: PropTypes.shape({
         name: PropTypes.string,
-        number: PropTypes.string,
+        phone: PropTypes.string,
         id: PropTypes.id,
     }),
     
