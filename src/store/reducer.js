@@ -59,22 +59,17 @@ export const addContacts = createAsyncThunk(
     "contacts/addContacts",
     async function (data, { rejectWithValue, dispatch }) { 
         try { 
-            /* "createdAt": "2022-08-22T20:18:40.512Z",
-            "name": "Vincent Oberbrunner IV",
-            "phone": "425-345-1737",
-            "id": "6" */
             const contact = {
                 name: data.name,
                 phone: data.phone,
-                createdAt: Date.now(),
             };
 
             const response = await fetch(`https://6304b2f794b8c58fd7231db1.mockapi.io/api/contacts`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': "application/json",
-                    body: JSON.stringify(contact)
-                }
+                },
+                body: JSON.stringify(contact)
             });
 
             if (!response.ok) { 
@@ -125,7 +120,7 @@ export const contactsSlice = createSlice({
 });
 
 
-export const { setFilter, setContact, removeContact , fetchItemsRequest, fetchItemsSucsess, fetchItemsFailed} = contactsSlice.actions;
+export const { setFilter, setContact, removeContact} = contactsSlice.actions;
 
 export default contactsSlice.reducer;
 

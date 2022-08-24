@@ -19,14 +19,13 @@ const ContactList = () => {
     const getVisibleContacts = () => {
         const filterValueTolowerCase = filterValue.toLowerCase();
 
-        console.log(contacts)
         return contacts.filter(
             contact => contact.name.toLowerCase().includes(filterValueTolowerCase)
         );
     };
 
     let filtredContacts = getVisibleContacts();
-    
+    console.log(filtredContacts)
     return (
         <ul className={s.list}>
             {error && <p>{error}</p>}

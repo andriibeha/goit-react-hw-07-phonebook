@@ -12,13 +12,11 @@ let inputTelId = nanoid();
 function Form() {
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
-    const [id, setId] = useState("");
     const contacts = useSelector((state) => state.contactsSlice.contacts.items);
     const dispatch = useDispatch();
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setId(nanoid());
 
         if (name === "name") { 
             return (setName(value));
@@ -29,7 +27,7 @@ function Form() {
     
     const handleSubmit = e => {
         e.preventDefault();
-        let data = { name, phone, id };
+        let data = { name, phone };
         let findName = contacts.find(item => item.name.toLowerCase() === data.name.toLowerCase()); 
 
         if (findName) { 
@@ -44,7 +42,6 @@ function Form() {
     const reset = () => {
         setName("");
         setPhone("");
-        setId("");
     };
 
     return (
