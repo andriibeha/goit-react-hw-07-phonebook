@@ -25,11 +25,11 @@ const ContactList = () => {
     };
 
     let filtredContacts = getVisibleContacts();
-    console.log(filtredContacts)
+
     return (
         <ul className={s.list}>
-            {error && <p>{error}</p>}
-            {isLoading && <p>Loading...</p>}
+            {error && <li>{error}</li>}
+            {isLoading && <li>Loading...</li>}
                 
             {filtredContacts.map((item) => (
                 <ContactItem key={item.id} item={item} />

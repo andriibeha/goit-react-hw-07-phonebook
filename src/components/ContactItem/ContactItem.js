@@ -18,13 +18,13 @@ const ContactItem = ({ item }) => {
 };
 
 
-ContactItem.prototype = { 
+ContactItem.prototype = {
     item: PropTypes.shape({
         name: PropTypes.string,
         phone: PropTypes.string,
-        id: PropTypes.id,
+        id: PropTypes.string,
+        createdAt: PropTypes.string
     }),
-    
 }
 
 export default ContactItem;
